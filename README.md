@@ -1,5 +1,3 @@
-# Cas09Vezbanje
-
 import psycopg2 as psycopg2
 import openpyxl as openpyxl
 from tkinter import *
@@ -29,6 +27,21 @@ b3=Button(master=root,text='Izbor',
           command=lambda:izbor())
 b3.place(relx=0.1,rely=0.6)
 
+var=StringVar()
+w1 = Radiobutton ( master=root,text='Ime',variable=var,value="Ime")
+w1.place(relx=0.5,rely=0.2)
+
+w2 = Radiobutton ( master=root,text='Prezime',variable=var,value="Prezime")
+w2.place(relx=0.5,rely=0.5)
+
+w3 = Radiobutton (master=root,text='Godina',variable=var,value="Godina")
+w3.place(relx=0.5,rely=0.7)
+
+b4=Button(master=root,text='Export',
+          width=15,
+          height=1,
+          command=lambda:izbor(var.get()))
+b4.place(relx=0.5,rely=0.8)
 
 def muskarci():
     cursor=con.cursor()
@@ -82,20 +95,39 @@ def zene():
     wb.save(filename='zene.xlsx')
 
 def dodajclana():
-    IDc=input('Unesite JMBG:  ')
-    imec=input('Unesite Ime:  ')
-    prezc=input('Unesite Prezime:  ')
-    godinec=input('Unesite godine:  ')
-    polc=input('Unesite pol:  ')
+    dodaj=Toplevel(root)
+    dodaj.geometry('200x2009')
+    l11=Label(dodaj,text='JMBG')
+    l11.place(relx=0.1,rely=0.1)
+    l12=Label(dodaj,text='Ime')
+    l12.place(relx=0.1,rely=0.2)
+    l13=Label(dodaj,text='Prezime')
+    l13.place(relx=0.1,rely=0.3)
+    l14=Label(dodaj,text='Godine')
+    l14.place(relx=0.1,rely=0.4)
+    l15=Label(dodaj,text='Pol')
+    l15.place(relx=0.1,rely=0.5)
+
+    e11=Entry(dodaj)
+    e11.place(relx=0.5,rely=0.1)
+    e12=Entry(dodaj)
+    e12.place(relx=0.5,rely=0.2)
+    e13=Entry(dodaj)
+    e13.place(relx=0.5,rely=0.3)
+    e14=Entry(dodaj)
+    e14.place(relx=0.5,rely=0.4)
+    e15=Entry(dodaj)
+    e15.place(relx=0.5,rely=0.5)
+    b11=Button(dodaj,text='Dodaj',command=lambda:[aa=e11.get(),imec=e12.get(),prezc=e13.get(),godinec=eval(e14.get()),polc=e15.get()])
+    b11.place(relx=0.5,rely=0.8)
     cursor=con.cursor()
-    cursor.execute('''INSERT INTO COVEK (JMBG, IME,PREZIME,BROJ_GODINA,POL) VALUES ('{}','{}','{}',{},'{}');'''.format(IDc,imec,prezc,eval(godinec),polc))
+    cursor.execute('''INSERT INTO COVEK (JMBG, IME,PREZIME,BROJ_GODINA,POL) VALUES ('{}','{}','{}',{},'{}');'''.format(aa,imec,prezc,eval(godinec),polc))
     con.commit()
     cursor.close()
     con.close()
 
 
-def izbor():
-    krit=input("Unesi kriterijum: ")
+def izbor(krit):
     cursor=con.cursor()
     cursor.execute("SELECT * FROM COVEK ORDER BY {}".format(krit))
     result=cursor.fetchall()
